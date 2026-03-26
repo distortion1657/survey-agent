@@ -22,6 +22,8 @@ if _env_local.exists():
     from dotenv import load_dotenv
     load_dotenv(_env_local)
 
+os.environ['PGSERVICEFILE'] = '/home/distortion/.pg_service_psychology.conf'
+os.environ['PGPASSFILE'] = '/home/distortion/.pgpass_psychology'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -83,10 +85,14 @@ WSGI_APPLICATION = 'psychology_agent.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'OPTIONS':{
+            'service': 'supabase',
+            
+        }
     }
 }
+
 
 
 # Password validation
