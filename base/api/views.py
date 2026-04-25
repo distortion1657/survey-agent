@@ -22,18 +22,18 @@ def generateAIResponse(request):
     rubric = request.data.get("rubric")
     scenario = request.data.get("scenario")
     content = f"""
-        Here is the rubric: 
-        {rubric}
-
+        Picture this.
         
         Scenario: 
         {scenario} 
+
+        For each question, quote the question and answer it. You're supposed to answer like an Undergraduate student. 
     """
     completion = openai.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", 
-            "content": "You are to respond to the questions asked by the user. You will be evaluated based on a rubric that the user submits."},
+            "content": "You are to respond to the questions asked by the scneario provided to you. Respond whether you agree or disagree, and describe your reasong to do so fluently. You will be evaluated based on a rubric that the user submits."},
             {"role": "user", "content": content},
         ],
     )
@@ -65,6 +65,8 @@ def generateAIResponse(request):
     a.save()
     return HttpResponse('Successfully generated')
 
-
+# Code/Grade participant's responses by the AI using the rubric provided
+def generateAIFeedback():
+    
 
     
