@@ -70,28 +70,32 @@ export default function Home() {
 
   }
   return (
-    <div className="p-10 pl-20 pr-20">
-      <header className="pb-10">
-        <h1>AI Respondent</h1>
+    <div className="flex flex-col p-10 w-full ">
+      <header className="pb-10 w-full">
+        <h1 className="font-semibold text-3xl pb-5">Generate New Assessment</h1>
         <p>Define your evaluation context by providing the scenario and corresponding rubric.</p>
         <p>Choose between direct input or source file upload for each component.</p>
       </header>
       {error && <p className="text-red-500">{error}</p>}
-      <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
+      <form className='flex flex-col ' onSubmit={handleSubmit}>
         <label htmlFor="scenario" className="text-lg font-semibold">Scenario</label>
-        <p>Provide the scenario that will be presented to the respondent.</p>
-        <div className='flex flex-row gap-10'>
+        <p className='pb-7'>Provide the scenario that will be presented to the respondent.</p>
+        <div className='flex flex-row gap-10 pb-20'>
           <textarea id="scenario"
             name="scenario"
             content={scenario}
             value={scenario}
             placeholder="Enter scenario "
             onChange={(e) => setScenario(e.target.value)}
-            className="resize-none border-white bg-white rounded-md p-2 w-200 h-70" />
+            className="resize-none border-white bg-white rounded-md p-2 w-200 h-70"
+            required />
 
           <label
-            className="border-dashed border-2 border-gray-400 rounded-md p-10 text-center"
+            className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md bg-secondary p-10 "
             id="scenarioDropZone">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#4f39f6" className='pb-2'>
+              <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+            </svg>
             <p>Drop files here, or click to upload</p>
             <input type="file"
               id="scenarioFile"
@@ -102,27 +106,32 @@ export default function Home() {
         </div>
         {/* Section for rubric */}
         <label htmlFor="rubric" className="text-lg font-semibold">Rubric</label>
-        <p>Define the evaluation criteria and scoring guidelines for the scenario.</p>
-        <div className='flex flex-row gap-10'>
+        <p className='pb-7'>Define the evaluation criteria and scoring guidelines for the scenario.</p>
+        <div className='flex flex-row gap-10 pb-10'>
           <textarea id="rubric"
             name="rubric"
             value={rubric}
             placeholder="Enter rubric"
             onChange={(e) => setRubric(e.target.value)}
-            className=" resize-none border-white bg-white rounded-md p-2 w-200 h-70" />
+            className=" resize-none border-white bg-white rounded-md p-2 w-200 h-70"
+            required />
 
           <label
-            className="border-dashed border-2 border-gray-400 rounded-md p-10 text-center"
+            className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md bg-secondary p-10 "
             id="rubricDropZone">
-            <p>Drop files here, or click to upload</p>
+            <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#4f39f6" className='pb-2'>
+              <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+            </svg>
+            <p >Drop files here, or click to upload</p>
             <input type="file"
               id="rubricFile"
               name="scenarioFile"
               onChange={handleSelect(setRubric)}
               className="hidden p-3 text-center" />
-          </label>        </div>
+          </label>
+        </div>
         <button type="submit"
-          className='rounded-full border-indigo-600 bg-indigo-600 text-white p-2 w-50'>Generate Assessment</button>
+          className='rounded-full hover:scale-105 transition-transform duration-200  border-indigo-600 bg-indigo-600 shadow-md shadow-indigo-600 text-white pl-4 pr-4 pt-3 pb-3 w-50'>Generate Assessment</button>
       </form>
 
     </div>
