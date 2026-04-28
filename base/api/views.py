@@ -66,7 +66,68 @@ def generateAIResponse(request):
     return HttpResponse('Successfully generated')
 
 # Code/Grade participant's responses by the AI using the rubric provided
-def generateAIFeedback():
-    
+@api_view(["POST"])
+def generateAIGrading(request):
+    participant_response = request.data.get('participant_response')
+    rubric = request.data.get('rubric')
+    scenario = request.data.get('scenario')
+
+    content = f"""
+    You are an objective grader. Your task is to evaluate a student's survey response using the provided rubric.
+
+    Instructions:
+    Understand the given scenario.
+    Carefully read the participant's response.
+    Compare it against each criterion in the rubric.
+    Assign a score for each criterion based strictly on the rubric descriptions.
+    Provide a brief justification for each score.
+    Be consistent, fair, and avoid subjective bias.
+    Do not give credit for elements that are not explicitly present.
+
+    Scenario:
+    {scenario}
+    Rubric:
+    {rubric}
+
+    Participant's Response:
+    {participant_response}
+    """
+
+    completion = openai.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", 
+            "content": "You are a grader."},
+            {"role": "user", "content": content},
+        ],
+    )
+    response_md = completion.choices[0].message.content or ""
+    response_html = markdown.markdown(
+        response_md,
+        extensions=["fenced_code", "tables", "nl2br"],
+    )
+    html = f"""<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            .md-content h1{{ font-size:1.5em; }} .md-content h2{{ font-size:1.3em; }}
+            .md-content ul, .md-content ol{{ margin:0.5em 0; padding-left:1.5em; }}
+            .md-content pre{{ background:#f5f5f5; padding:1em; overflow-x:auto; border-radius:4px; }}
+            .md-content code{{ background:#f5f5f5; padding:0.2em 0.4em; border-radius:3px; }}
+            .md-content table{{ border-collapse:collapse; }} .md-content th, .md-content td{{ border:1px solid #ddd; padding:0.4em 0.6em; }}
+        </style>
+    </head>
+    <body>
+    <h1>AI Response</h1>
+    <div class="md-content">{response_html}</div>
+    </body>
+    </html>
+    """
+    # Lazy code over here
+    a = AIResponse.objects.get(id=1)
+    a.response = html
+    a.save()
+
+    return HttpResponse()
 
     
