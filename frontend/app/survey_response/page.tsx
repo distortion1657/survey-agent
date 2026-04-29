@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API } from "@/lib/api";
+import Navbar from "../components/navbar";
 
 
 export default function AIResponse() {
@@ -16,6 +17,7 @@ export default function AIResponse() {
     }, [])
 
     return (
+        <div><Navbar />
         <div className="p-10 pl-20 pr-20 font-roboto">
             <Link href="/" className="text-indigo-600 hover:underline mb-5 inline-block">&larr; Back to Input</Link>
 
@@ -28,6 +30,7 @@ export default function AIResponse() {
                     <p>Please submit a scenario and rubric from the home page first.</p>
                 </div>
             )}
+        </div>
         </div>
     )
 }

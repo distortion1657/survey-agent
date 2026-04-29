@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react"
 import { API } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import Navbar from "../components/navbar";
 
 
 export default function Grading(){
@@ -45,8 +46,9 @@ export default function Grading(){
     }
   }
     return(
+        <div><Navbar />
         <div className='flex flex-col p-10 w-full' >
-            <Link href="/" className="text-indigo-600 hover:underline mb-5 inline-block">&larr; Back to Input</Link>
+
 
             <form className='flex flex-col ' onSubmit={handleSubmit}>
                 {/* Section for scenario  */}
@@ -63,7 +65,7 @@ export default function Grading(){
                     required />
 
                 <label
-                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md bg-secondary p-10 "
+                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md  p-10 "
                     id="scenarioDropZone">
                     <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#4f39f6" className='pb-2'>
                     <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
@@ -89,7 +91,7 @@ export default function Grading(){
                     required />
 
                 <label
-                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md bg-secondary p-10 "
+                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md  p-10 "
                     id="rubricDropZone">
                     <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#4f39f6" className='pb-2'>
                     <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
@@ -116,7 +118,7 @@ export default function Grading(){
                     required />
 
                 <label
-                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md bg-secondary p-10 "
+                    className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-md  p-10 "
                     id="rubricDropZone">
                     <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#4f39f6" className='pb-2'>
                     <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
@@ -138,6 +140,7 @@ export default function Grading(){
             Generate Assessment
             </button>
             </form>
+        </div>
         </div>
     )
 }
