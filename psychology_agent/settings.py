@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-p1zv31&a9#f@)j@2_35()-ebqgbu)e=8&q&8s3h*@fjpp-z(y&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -47,10 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base',
     'rest_framework',
+    'corsheaders'
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +64,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'psychology_agent.urls'
 
+CORS_ALLOWED_ORIGINS=[
+    'http://localhost:3000'
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

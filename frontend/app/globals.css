@@ -13,6 +13,8 @@
   --font-mono: var(--font-geist-mono);
   --color-offwhite: #eff4f8fc;
   --color-secondary: #e7eaecfc;
+  --color-primary: #1e3a8a;
+  --color-secondary: #64748b;
 }
 
 /* @media (prefers-color-scheme: dark) {
