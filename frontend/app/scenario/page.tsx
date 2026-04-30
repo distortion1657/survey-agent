@@ -70,7 +70,7 @@ export default function Scenario() {
   }
   return (
     <div>
-            <Navbar />
+    <Navbar />
 
     <div className="flex flex-col p-10 w-full ">
 
