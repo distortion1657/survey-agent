@@ -4,7 +4,8 @@ import { useState } from "react"
 import { API } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/navbar";
-
+import GradingResponse from "../grading_response/page";
+import {v4} from "uuid"
 
 export default function Grading(){
     const router = useRouter()
@@ -14,13 +15,15 @@ export default function Grading(){
     const [participant_response, setParticipant_Response] = useState<string>('')
 
     async function handleSubmit(e: React.SubmitEvent){
+      let uuid = v4()
       e.preventDefault();
       const response = await API.post('/api/generate-ai-grading', {
           rubric: rubric,
           participant_response: participant_response,
-          scenario: scenario
+          scenario: scenario,
+          uuid: uuid
       })
-      router.push('/grading_response');
+      router.push(`/grading_response?uuid=${uuid}`);
     }
 
     // Handle file selection for both scenario and rubric. The function strucutre might seem confusing but most of it is just specifying the types.

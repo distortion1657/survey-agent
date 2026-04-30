@@ -1,8 +1,10 @@
+import json
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from openai import OpenAI
-from base.models import AIResponse
+from base.models import AIResponse, Grading
 import markdown
 import os
 
@@ -71,7 +73,7 @@ def generateAIGrading(request):
     participant_response = request.data.get('participant_response')
     rubric = request.data.get('rubric')
     scenario = request.data.get('scenario')
-
+    uuid = request.data.get('uuid')
     content = f"""
     You are an objective grader. Your task is to evaluate a student's survey response using the provided rubric.
 
@@ -91,6 +93,14 @@ def generateAIGrading(request):
 
     Participant's Response:
     {participant_response}
+
+    You must return your response as a raw JSON object that has the following structure:
+        [{{
+            Criteria: "",
+            Score: "",
+            Justification: ""
+        }}]
+    Make sure to add no additional markdown or anything of that sort.
     """
 
     completion = openai.chat.completions.create(
@@ -101,33 +111,25 @@ def generateAIGrading(request):
             {"role": "user", "content": content},
         ],
     )
-    response_md = completion.choices[0].message.content or ""
-    response_html = markdown.markdown(
-        response_md,
-        extensions=["fenced_code", "tables", "nl2br"],
-    )
-    html = f"""<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <style>
-            .md-content h1{{ font-size:1.5em; }} .md-content h2{{ font-size:1.3em; }}
-            .md-content ul, .md-content ol{{ margin:0.5em 0; padding-left:1.5em; }}
-            .md-content pre{{ background:#f5f5f5; padding:1em; overflow-x:auto; border-radius:4px; }}
-            .md-content code{{ background:#f5f5f5; padding:0.2em 0.4em; border-radius:3px; }}
-            .md-content table{{ border-collapse:collapse; }} .md-content th, .md-content td{{ border:1px solid #ddd; padding:0.4em 0.6em; }}
-        </style>
-    </head>
-    <body>
-    <h1>AI Response</h1>
-    <div class="md-content">{response_html}</div>
-    </body>
-    </html>
-    """
-    # Lazy code over here
-    a = AIResponse.objects.get(id=1)
-    a.response = html
-    a.save()
+    response= completion.choices[0].message.content
+    # Create a new entry in the db
+    entry = Grading.objects.create(
+        uuid= uuid,
+        ai_response= json.loads(response))
+    entry.save()
+    return HttpResponse("AI Grading generated.")
 
-    return HttpResponse()
+@api_view(['GET'])
+def getAIGrading(request):
+    uuid = request.query_params.get('uuid')
+    print(uuid)
+    try:
+        response = Grading.objects.get(uuid=uuid)
+
+    except Grading.DoesNotExist:
+        return HttpResponse("An entry with that UUID does not exist in the database.", 500)
+    
+    return JsonResponse(response.ai_response,safe=False)
+    
 
     
