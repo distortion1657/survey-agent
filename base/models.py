@@ -19,6 +19,8 @@ class Participant(models.Model):
 
 class Grading(models.Model):
     uuid = models.UUIDField(null=False)
+    scenario = models.TextField(null=False)
+    student_response = models.TextField(null=False)
     ai_response = models.JSONField()
     created_at = models.DateTimeField( default=datetime.now())
     
