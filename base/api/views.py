@@ -7,8 +7,17 @@ from openai import OpenAI
 from base.models import AIResponse, Grading
 import markdown
 import os
+import environ
 
-_api_key = os.environ.get("OPENAI_API_KEY")
+env = environ.Env(
+    DEBUG=(bool,False)
+)
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+environ.Env.read_env((os.path.join(BASE_DIR, '.env.local')))
+
+_api_key = env('OPENAI_API_KEY')
 if not _api_key:
     raise RuntimeError(
         "OPENAI_API_KEY is not set. Add it to .env.local or export it in your shell."
@@ -39,7 +48,6 @@ def generateAIResponse(request):
             {"role": "user", "content": content},
         ],
     )
-
     response_md = completion.choices[0].message.content or ""
     response_html = markdown.markdown(
         response_md,
@@ -94,28 +102,31 @@ def generateAIGrading(request):
     Participant's Response:
     {participant_response}
 
-    You must return your response as a raw JSON object that has the following structure:
+    You MUST return your response as a raw JSON object that has the following structure:
         [{{
             Criteria: "",
             Score: "",
-            Justification: ""
+            Justification: "" 
         }}]
     Make sure to add no additional markdown or anything of that sort.
     """
 
     completion = openai.chat.completions.create(
-        model="gpt-4o",
+        model="o4-mini",
         messages=[
             {"role": "system", 
             "content": "You are a grader."},
             {"role": "user", "content": content},
         ],
     )
+    print(completion.model)
     response= completion.choices[0].message.content
     # Create a new entry in the db
     entry = Grading.objects.create(
         uuid= uuid,
-        ai_response= json.loads(response))
+        ai_response= json.loads(response),
+        scenario=scenario,
+        student_response=participant_response)
     entry.save()
     return HttpResponse("AI Grading generated.")
 

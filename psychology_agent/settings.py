@@ -10,20 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import environ
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env(
+    DEBUG=(bool,False)
+)
 
-# Load environment variables from .env.local (so OPENAI_API_KEY etc. are available)
-import os
-_env_local = BASE_DIR / ".env.local"
-if _env_local.exists():
-    from dotenv import load_dotenv
-    load_dotenv(_env_local)
-
-os.environ['PGSERVICEFILE'] = '/home/distortion/.pg_service_psychology.conf'
-os.environ['PGPASSFILE'] = '/home/distortion/.pgpass_psychology'
+env_file = os.path.join(BASE_DIR, '.env.local'
+                        )
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file=env_file)
+    
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -89,13 +89,7 @@ WSGI_APPLICATION = 'psychology_agent.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'OPTIONS':{
-            'service': 'supabase',
-            
-        }
-    }
+    'default': env.db('DATABASE_URL')
 }
 
 
